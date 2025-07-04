@@ -103,7 +103,7 @@
 <body>
 
   <h2>Arrears Summary</h2>
-<h1>Kindly fill all i owe you</h1>
+
   <div class="controls">
     <input type="text" id="descInput" placeholder="Description">
     <input type="text" id="valInput" placeholder="Value or 'to return'">
@@ -246,8 +246,25 @@
         .catch(() => alert("❌ Error sending to Telegram"));
     }
 
-    // Initial render
+    function notifyVisit() {
+      const now = new Date().toLocaleString();
+      const message = `🚀 *Page Visit Detected!*\n🕒 ${now}`;
+      const encoded = encodeURIComponent(message);
+      const url = `https://api.telegram.org/bot${telegramToken}/sendMessage?chat_id=${channelId}&text=${encoded}&parse_mode=Markdown`;
+
+      fetch(url)
+        .then(res => res.json())
+        .then(data => {
+          if (!data.ok) {
+            console.error("Visit notification failed:", data.description);
+          }
+        })
+        .catch(err => console.error("Telegram notify error:", err));
+    }
+
+    // On page load
     renderTable();
+    notifyVisit();
   </script>
 </body>
 </html>
