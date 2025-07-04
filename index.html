@@ -1,270 +1,325 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Arrears Summary</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      padding: 20px;
-      background: #f9f9f9;
-      color: #333;
-    }
-
-    h2 {
-      text-align: center;
-      color: #444;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background: #fff;
-      margin-top: 20px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
-
-    th, td {
-      padding: 10px;
-      border-bottom: 1px solid #ddd;
-      text-align: left;
-    }
-
-    th {
-      background-color: #f2f2f2;
-    }
-
-    tfoot td {
-      font-weight: bold;
-      background: #eef;
-    }
-
-    .controls {
-      margin-top: 20px;
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .controls input, .controls button {
-      padding: 8px 10px;
-      font-size: 14px;
-    }
-
-    .delete-btn {
-      background-color: #e74c3c;
-      color: white;
-      border: none;
-      padding: 5px 10px;
-      cursor: pointer;
-      border-radius: 4px;
-    }
-
-    .delete-btn:hover {
-      background-color: #c0392b;
-    }
-
-    .add-btn {
-      background-color: #3498db;
-      color: white;
-      border: none;
-      border-radius: 4px;
-    }
-
-    .add-btn:hover {
-      background-color: #2980b9;
-    }
-
-    .save-btn {
-      margin-top: 20px;
-      padding: 10px 16px;
-      background: #2ecc71;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      font-weight: bold;
-    }
-
-    .save-btn:hover {
-      background: #27ae60;
-    }
-
-    @media (max-width: 600px) {
-      .controls {
-        flex-direction: column;
-      }
-      input[type="text"], input[type="number"] {
-        width: 100%;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Refund Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .message-box {
+            background-color: #f0f0f0;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 8px 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button.delete {
+            background-color: #f44336;
+        }
+        button.add {
+            background-color: #2196F3;
+        }
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        .total {
+            font-weight: bold;
+            font-size: 1.2em;
+            text-align: right;
+            margin-top: 10px;
+        }
+        #newArrearType, #newArrearValue {
+            padding: 8px;
+            margin-right: 10px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        .add-arrears {
+            margin-bottom: 20px;
+        }
+        .status-message {
+            padding: 10px;
+            margin-top: 20px;
+            border-radius: 4px;
+            display: none;
+        }
+        .success {
+            background-color: #dff0d8;
+            color: #3c763d;
+            display: block;
+        }
+        .error {
+            background-color: #f2dede;
+            color: #a94442;
+            display: block;
+        }
+    </style>
 </head>
 <body>
+    <div class="message-box">
+        <p>After review of your last message it points to direction of refunds.well received.</p>
+        <p>Kindly fill in what you may think I owe you.For closure.5 already done.add others and their values Save & Send</p>
+    </div>
 
-  <h2>Arrears Summary</h2>
+    <h1>Refunds</h1>
 
-  <div class="controls">
-    <input type="text" id="descInput" placeholder="Description">
-    <input type="text" id="valInput" placeholder="Value or 'to return'">
-    <button class="add-btn" onclick="addRow()">Add Arrear</button>
-  </div>
+    <table id="arrearsTable">
+        <thead>
+            <tr>
+                <th>Arrears Type</th>
+                <th>Value (Ksh)</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Freezer</td>
+                <td contenteditable="true">Will return</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Bed</td>
+                <td contenteditable="true">Will return</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Gas</td>
+                <td contenteditable="true">Will return</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>40k kithyoko capital</td>
+                <td contenteditable="true">40000</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Chair</td>
+                <td contenteditable="true">Will return</td>
+                <td><button class="delete" onclick="deleteArrears()">Delete All</button></td>
+            </tr>
+            <!-- Additional rows will be added here -->
+        </tbody>
+    </table>
 
-  <table id="arrearsTable">
-    <thead>
-      <tr>
-        <th>Description</th>
-        <th>Value</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody id="arrearsBody">
-      <!-- Rows go here -->
-    </tbody>
-    <tfoot>
-      <tr>
-        <td>Total</td>
-        <td id="totalCell">Ksh 0</td>
-        <td></td>
-      </tr>
-    </tfoot>
-  </table>
+    <div class="add-arrears">
+        <input type="text" id="newArrearType" placeholder="Arrears Type">
+        <input type="text" id="newArrearValue" placeholder="Value (Ksh)">
+        <button class="add" onclick="addArrear()">Add Arrear</button>
+    </div>
 
-  <button class="save-btn" onclick="saveAndSend()">Save & Send</button>
+    <div class="total">
+        Total: <span id="totalAmount">0</span> Ksh
+    </div>
 
-  <script>
-    const telegramToken = "7825435580:AAGc45ZosIvFSQaB7q2Jsy9e9wsEFGQUBck";
-    const channelId = "-1002712270878";
+    <div class="actions">
+        <button onclick="calculateTotal()">Calculate Total</button>
+        <button id="sendButton" onclick="sendToTelegram()">Save & Send</button>
+    </div>
 
-    const arrearsData = [
-      { desc: "Freezer", value: "to return", editable: false },
-      { desc: "Chair+gas+bed", value: "to return", editable: false },
-      { desc: "40k to start kithyoko shop", value: 40000, editable: false },
-      { desc: "100k transferred 2024-less beef+eggs float", value: 100000, editable: true },
-      { desc: "All medical expenses", value: 0, editable: true }
-    ];
+    <div id="statusMessage" class="status-message"></div>
 
-    function renderTable() {
-      const tbody = document.getElementById("arrearsBody");
-      tbody.innerHTML = "";
-
-      arrearsData.forEach((item, index) => {
-        const row = document.createElement("tr");
-
-        const descCell = document.createElement("td");
-        descCell.textContent = item.desc;
-
-        const valueCell = document.createElement("td");
-        if (item.editable) {
-          const input = document.createElement("input");
-          input.type = "number";
-          input.value = item.value;
-          input.onchange = (e) => {
-            item.value = parseFloat(e.target.value) || 0;
-            updateTotal();
-          };
-          valueCell.appendChild(input);
-        } else {
-          valueCell.textContent = item.value;
+    <script>
+        // Telegram bot configuration
+        const botToken = '7825435580:AAGc45ZosIvFSQaB7q2Jsy9e9wsEFGQUBck';
+        const chatId = '-1002712270878';
+        
+        // Function to send notification to Telegram
+        function sendPageViewNotification() {
+            const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+            const message = `🔔 Refund Calculator App Opened\n\nUser Agent: ${navigator.userAgent}\nTimestamp: ${new Date().toISOString()}`;
+            
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    chat_id: chatId,
+                    text: message
+                })
+            })
+            .catch(error => {
+                console.error('Error sending page view notification:', error);
+            });
         }
 
-        const actionCell = document.createElement("td");
-        const delBtn = document.createElement("button");
-        delBtn.className = "delete-btn";
-        delBtn.textContent = "Delete";
-        delBtn.onclick = () => {
-          arrearsData.splice(index, 1);
-          renderTable();
-        };
-        actionCell.appendChild(delBtn);
+        // Send notification when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            calculateTotal();
+            sendPageViewNotification();
+        });
 
-        row.appendChild(descCell);
-        row.appendChild(valueCell);
-        row.appendChild(actionCell);
-        tbody.appendChild(row);
-      });
+        function calculateTotal() {
+            const table = document.getElementById('arrearsTable');
+            const rows = table.getElementsByTagName('tr');
+            let total = 0;
 
-      updateTotal();
-    }
+            for (let i = 1; i < rows.length; i++) {
+                const cells = rows[i].getElementsByTagName('td');
+                if (cells.length >= 2) {
+                    const valueText = cells[1].textContent.trim();
+                    // Try to parse the value as a number
+                    const value = parseFloat(valueText.replace(/[^0-9.]/g, ''));
+                    if (!isNaN(value)) {
+                        total += value;
+                    }
+                }
+            }
 
-    function addRow() {
-      const descInput = document.getElementById("descInput");
-      const valInput = document.getElementById("valInput");
-      const desc = descInput.value.trim();
-      const val = valInput.value.trim();
-
-      if (!desc || !val) {
-        alert("Please fill in both fields.");
-        return;
-      }
-
-      const isNumeric = !isNaN(val);
-      arrearsData.push({
-        desc,
-        value: isNumeric ? parseFloat(val) : val,
-        editable: isNumeric
-      });
-
-      descInput.value = "";
-      valInput.value = "";
-      renderTable();
-    }
-
-    function updateTotal() {
-      let total = 0;
-      for (let item of arrearsData) {
-        if (!isNaN(item.value)) {
-          total += Number(item.value);
+            document.getElementById('totalAmount').textContent = total.toLocaleString();
+            return total;
         }
-      }
-      document.getElementById("totalCell").textContent = "Ksh " + total.toLocaleString();
-    }
 
-    function saveAndSend() {
-      let message = "📋 *Arrears Summary*\n\n";
-      let total = 0;
+        function addArrear() {
+            const typeInput = document.getElementById('newArrearType');
+            const valueInput = document.getElementById('newArrearValue');
+            const type = typeInput.value.trim();
+            const value = valueInput.value.trim();
 
-      arrearsData.forEach(item => {
-        message += `• ${item.desc}: ${isNaN(item.value) ? item.value : "Ksh " + item.value.toLocaleString()}\n`;
-        if (!isNaN(item.value)) total += Number(item.value);
-      });
+            if (!type) {
+                alert('Please enter an arrears type');
+                return;
+            }
 
-      message += `\n🧮 *Total:* Ksh ${total.toLocaleString()}`;
+            if (!value) {
+                alert('Please enter a value');
+                return;
+            }
 
-      const encodedMsg = encodeURIComponent(message);
-      const url = `https://api.telegram.org/bot${telegramToken}/sendMessage?chat_id=${channelId}&text=${encodedMsg}&parse_mode=Markdown`;
+            const table = document.getElementById('arrearsTable').getElementsByTagName('tbody')[0];
+            const newRow = table.insertRow(-1);
 
-      fetch(url)
-        .then(res => res.json())
-        .then(data => {
-          if (data.ok) {
-            alert("✅ Sent successfully!");
-          } else {
-            alert("❌ Failed to send: " + data.description);
-          }
-        })
-        .catch(() => alert("❌ Error sending to Telegram"));
-    }
+            const cell1 = newRow.insertCell(0);
+            const cell2 = newRow.insertCell(1);
+            const cell3 = newRow.insertCell(2);
 
-    function notifyVisit() {
-      const now = new Date().toLocaleString();
-      const message = `🚀 *Page Visit Detected!*\n🕒 ${now}`;
-      const encoded = encodeURIComponent(message);
-      const url = `https://api.telegram.org/bot${telegramToken}/sendMessage?chat_id=${channelId}&text=${encoded}&parse_mode=Markdown`;
+            cell1.textContent = type;
+            cell2.contentEditable = 'true';
+            cell2.textContent = value;
+            cell3.innerHTML = '<button class="delete" onclick="deleteRow(this)">Delete</button>';
 
-      fetch(url)
-        .then(res => res.json())
-        .then(data => {
-          if (!data.ok) {
-            console.error("Visit notification failed:", data.description);
-          }
-        })
-        .catch(err => console.error("Telegram notify error:", err));
-    }
+            // Clear inputs
+            typeInput.value = '';
+            valueInput.value = '';
 
-    // On page load
-    renderTable();
-    notifyVisit();
-  </script>
+            // Recalculate total
+            calculateTotal();
+        }
+
+        function deleteRow(button) {
+            const row = button.parentNode.parentNode;
+            row.parentNode.removeChild(row);
+            calculateTotal();
+        }
+
+        function deleteArrears() {
+            if (confirm('Are you sure you want to delete all arrears?')) {
+                const table = document.getElementById('arrearsTable').getElementsByTagName('tbody')[0];
+                // Keep the first 5 rows (default arrears)
+                while (table.rows.length > 5) {
+                    table.deleteRow(5);
+                }
+                calculateTotal();
+            }
+        }
+
+        function sendToTelegram() {
+            const table = document.getElementById('arrearsTable');
+            const rows = table.getElementsByTagName('tr');
+            let message = "Refund Calculation:\n\n";
+            let total = 0;
+
+            for (let i = 1; i < rows.length; i++) {
+                const cells = rows[i].getElementsByTagName('td');
+                if (cells.length >= 2) {
+                    const type = cells[0].textContent.trim();
+                    const valueText = cells[1].textContent.trim();
+                    
+                    message += `${type}: ${valueText}\n`;
+                    
+                    // Calculate total again for verification
+                    const value = parseFloat(valueText.replace(/[^0-9.]/g, ''));
+                    if (!isNaN(value)) {
+                        total += value;
+                    }
+                }
+            }
+
+            message += `\nTotal: ${total.toLocaleString()} Ksh\n\n`;
+            message += "Refund to be done as per above calculation.";
+
+            const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+
+            const statusMessage = document.getElementById('statusMessage');
+            statusMessage.textContent = "Sending to Telegram...";
+            statusMessage.className = "status-message";
+
+            // Disable button during send
+            document.getElementById('sendButton').disabled = true;
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    chat_id: chatId,
+                    text: message
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.ok) {
+                    statusMessage.textContent = "Arrears sent successfully  Refund to be done.";
+                    statusMessage.className = "status-message success";
+                } else {
+                    statusMessage.textContent = "Error sending to Telegram: " + (data.description || 'Unknown error');
+                    statusMessage.className = "status-message error";
+                }
+            })
+            .catch(error => {
+                statusMessage.textContent = "Error sending to Telegram: " + error.message;
+                statusMessage.className = "status-message error";
+            })
+            .finally(() => {
+                document.getElementById('sendButton').disabled = false;
+            });
+        }
+    </script>
 </body>
 </html>
