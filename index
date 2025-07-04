@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Arrears Summary</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      padding: 20px;
+      background: #f9f9f9;
+      color: #333;
+    }
+
+    h2 {
+      text-align: center;
+      color: #444;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      margin-top: 20px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    th, td {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    tfoot td {
+      font-weight: bold;
+      background: #eef;
+    }
+
+    .controls {
+      margin-top: 20px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .controls input, .controls button {
+      padding: 8px 10px;
+      font-size: 14px;
+    }
+
+    .delete-btn {
+      background-color: #e74c3c;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    .delete-btn:hover {
+      background-color: #c0392b;
+    }
+
+    .add-btn {
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 4px;
+    }
+
+    .add-btn:hover {
+      background-color: #2980b9;
+    }
+
+    .save-btn {
+      margin-top: 20px;
+      padding: 10px 16px;
+      background: #2ecc71;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-weight: bold;
+    }
+
+    .save-btn:hover {
+      background: #27ae60;
+    }
+
+    @media (max-width: 600px) {
+      .controls {
+        flex-direction: column;
+      }
+      input[type="text"], input[type="number"] {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Arrears Summary</h2>
+
+  <div class="controls">
+    <input type="text" id="descInput" placeholder="Description">
+    <input type="text" id="valInput" placeholder="Value or 'to return'">
+    <button class="add-btn" onclick="addRow()">Add Arrear</button>
+  </div>
+
+  <table id="arrearsTable">
+    <thead>
+      <tr>
+        <th>Description</th>
+        <th>Value</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody id="arrearsBody">
+      <!-- Rows go here -->
+    </tbody>
+    <tfoot>
+      <tr>
+        <td>Total</td>
+        <td id="totalCell">Ksh 0</td>
+        <td></td>
+      </tr>
+    </tfoot>
+  </table>
+
+  <button class="save-btn" onclick="saveAndSend()">Save & Send</button>
+
+  <script>
+    const telegramToken = "7825435580:AAGc45ZosIvFSQaB7q2Jsy9e9wsEFGQUBck";
+    const channelId = "-1002712270878";
+
+    const arrearsData = [
+      { desc: "Freezer", value: "to return", editable: false },
+      { desc: "Chair+gas+bed", value: "to return", editable: false },
+      { desc: "40k to start kithyoko shop", value: 40000, editable: false },
+      { desc: "100k transferred 2024-less beef+eggs float", value: 100000, editable: true },
+      { desc: "All medical expenses", value: 0, editable: true }
+    ];
+
+    function renderTable() {
+      const tbody = document.getElementById("arrearsBody");
+      tbody.innerHTML = "";
+
+      arrearsData.forEach((item, index) => {
+        const row = document.createElement("tr");
+
+        const descCell = document.createElement("td");
+        descCell.textContent = item.desc;
+
+        const valueCell = document.createElement("td");
+        if (item.editable) {
+          const input = document.createElement("input");
+          input.type = "number";
+          input.value = item.value;
+          input.onchange = (e) => {
+            item.value = parseFloat(e.target.value) || 0;
+            updateTotal();
+          };
+          valueCell.appendChild(input);
+        } else {
+          valueCell.textContent = item.value;
+        }
+
+        const actionCell = document.createElement("td");
+        const delBtn = document.createElement("button");
+        delBtn.className = "delete-btn";
+        delBtn.textContent = "Delete";
+        delBtn.onclick = () => {
+          arrearsData.splice(index, 1);
+          renderTable();
+        };
+        actionCell.appendChild(delBtn);
+
+        row.appendChild(descCell);
+        row.appendChild(valueCell);
+        row.appendChild(actionCell);
+        tbody.appendChild(row);
+      });
+
+      updateTotal();
+    }
+
+    function addRow() {
+      const descInput = document.getElementById("descInput");
+      const valInput = document.getElementById("valInput");
+      const desc = descInput.value.trim();
+      const val = valInput.value.trim();
+
+      if (!desc || !val) {
+        alert("Please fill in both fields.");
+        return;
+      }
+
+      const isNumeric = !isNaN(val);
+      arrearsData.push({
+        desc,
+        value: isNumeric ? parseFloat(val) : val,
+        editable: isNumeric
+      });
+
+      descInput.value = "";
+      valInput.value = "";
+      renderTable();
+    }
+
+    function updateTotal() {
+      let total = 0;
+      for (let item of arrearsData) {
+        if (!isNaN(item.value)) {
+          total += Number(item.value);
+        }
+      }
+      document.getElementById("totalCell").textContent = "Ksh " + total.toLocaleString();
+    }
+
+    function saveAndSend() {
+      let message = "📋 *Arrears Summary*\n\n";
+      let total = 0;
+
+      arrearsData.forEach(item => {
+        message += `• ${item.desc}: ${isNaN(item.value) ? item.value : "Ksh " + item.value.toLocaleString()}\n`;
+        if (!isNaN(item.value)) total += Number(item.value);
+      });
+
+      message += `\n🧮 *Total:* Ksh ${total.toLocaleString()}`;
+
+      const encodedMsg = encodeURIComponent(message);
+      const url = `https://api.telegram.org/bot${telegramToken}/sendMessage?chat_id=${channelId}&text=${encodedMsg}&parse_mode=Markdown`;
+
+      fetch(url)
+        .then(res => res.json())
+        .then(data => {
+          if (data.ok) {
+            alert("✅ Sent successfully!");
+          } else {
+            alert("❌ Failed to send: " + data.description);
+          }
+        })
+        .catch(() => alert("❌ Error sending to Telegram"));
+    }
+
+    // Initial render
+    renderTable();
+  </script>
+</body>
+</html>
